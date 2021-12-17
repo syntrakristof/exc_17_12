@@ -62,7 +62,9 @@ class Game(BaseObject):
     def _get_dict(self) -> dict:
         return dict(
             website=self.website,
-            genre_types=self.genre_type
+            genre_types=self.genre_type,
+            title=self.title,
+            score=self.score
         )
 
     def _set_dict(self, value):
