@@ -1,7 +1,7 @@
 from base import BaseObject, BaseList
-from typing import Optional, Any
+from typing import Optional, Any, List
 
-genre_types = set(['Unknown', 'FPS', 'RPG', 'MMO', 'Arcade', 'Racing'])
+genre_types = ['Unknown', 'FPS', 'RPG', 'MMO', 'Arcade', 'Racing']
 
 
 class Game(BaseObject):
@@ -19,7 +19,7 @@ class Game(BaseObject):
     
     @title.setter
     def title(self, value: str):
-        self.title = value
+        self.__title = value.strip()
     
 
     @property
@@ -54,25 +54,58 @@ class Game(BaseObject):
         return self.__website
 
 
-    @property
+    @website.setter
     def website(self, value: str):
-        self.__website = value
+        self.__website = value.strip()
+
+
+    def __str__(self) -> str:
+        return self.title + ' - ' + str(round(self.score, 1))
 
 
     def _get_dict(self) -> dict:
         return dict(
             website=self.website,
-            genre_types=self.genre_type,
+            genre_type=self.genre_type,
             title=self.title,
             score=self.score
         )
 
-    def _set_dict(self, value):
-        pass
+    def _set_dict(self, value: dict):
+        self.website = value["website"]
+        self.genre_type = value["genre_type"]
+        self.title = value["title"]
+        self.score = value["score"]
 
+    @classmethod
     def fromDict(cls, value: dict) -> Any:
-        return None
+        g = Game()
+        g.as_dict = value
+        return g
 
+
+class GameList(BaseList):
+
+    def __init__(self):
+        super().__init__(Game, 'games.json')
+
+    def filter(self, state: int) -> List[Game]:
+        """get the filtered items
+
+        Args:
+            state (int): 
+                0: show all
+
+        Returns:
+            List[Game]: returns a list with items
+        """
+        if state == 0:
+            return self.items
+        else:
+            filtered_list: List[Game] = []
+            for item in self.items:
+                    filtered_list.append(item)
+            return filtered_list
 
 
 
